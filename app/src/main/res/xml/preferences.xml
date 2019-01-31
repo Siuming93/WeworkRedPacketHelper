@@ -48,7 +48,7 @@
             android:title="@string/version" />
         <Preference
             android:key="pref_app_author"
-            android:summary="CYB"
+            android:summary="Siuming"
             android:title="@string/author" />
         <Preference
             android:summary="@string/instructions_detail"

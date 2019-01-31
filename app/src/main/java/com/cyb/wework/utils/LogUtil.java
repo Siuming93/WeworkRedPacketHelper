@@ -9,7 +9,7 @@ import android.util.Log;
 public class LogUtil {
 
     public static boolean showLog = true;
-    public static String defaultTAG = "CYB";
+    public static String defaultTAG = "WYM";
 
     public static void d(String message){
         d(defaultTAG, message);

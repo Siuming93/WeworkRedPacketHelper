@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_app_name = findViewById(R.id.tv_app_name);
         tv_app_version = findViewById(R.id.tv_app_version);
         findViewById(R.id.btn_start).setOnClickListener(this);
-        findViewById(R.id.btn_start_watch_notification).setOnClickListener(this);
         findViewById(R.id.btn_setting).setOnClickListener(this);
     }
 
@@ -48,10 +47,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 final String text = "请在系统设置->无障碍服务中开启" + appName;
                 Toast.makeText(this, text, Toast.LENGTH_LONG).show();
                 break;
-            case R.id.btn_start_watch_notification:
-                startActivity( new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
-                Toast.makeText(this, "请在通知使用权中启用" + appName, Toast.LENGTH_LONG).show();
-                break;
+
+
             case R.id.btn_setting:
                 startActivity(new Intent(this, SettingActivity.class));
                 break;

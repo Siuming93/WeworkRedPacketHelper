@@ -220,6 +220,11 @@ public class RedPacketService extends AccessibilityService {
         } else if ("2.5.8".equals(weworkVersion)) {
             return "com.tencent.wework:id/cwf";
         }
+        else if ("2.7.2".equals(weworkVersion)) {
+            return "com.tencent.wework:id/d94";
+        }
+
+
         return null;
     }
 
@@ -231,8 +236,8 @@ public class RedPacketService extends AccessibilityService {
     private void queryPacket() {
         LogUtil.d( "开始查找红包 queryPacket");
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
-        String searchText = getResources().getString(R.string.open_red_packet); // 领取红包
-        AccessibilityNodeInfo node = getLastRedpackageNode(rootNode, searchText);
+
+        AccessibilityNodeInfo node = getLastRedpackageNode(rootNode);
         LogUtil.d( "最新的红包=" + node);
         if (node != null) {
             node.performAction(AccessibilityNodeInfo.ACTION_CLICK);
@@ -250,15 +255,21 @@ public class RedPacketService extends AccessibilityService {
     /**
      * 查找包含指定字符串的在屏幕最下面的一个节点
      * @param rootNode
-     * @param search
      * @return
      */
-    public AccessibilityNodeInfo getLastRedpackageNode(AccessibilityNodeInfo rootNode, String search) {
+    public AccessibilityNodeInfo getLastRedpackageNode(AccessibilityNodeInfo rootNode) {
         AccessibilityNodeInfo resultNode = null;
+        String search = getResources().getString(R.string.open_red_packet); // 红包
+        String openedMark = getResources().getString(R.string.opened_red_packet);
         if (rootNode != null) {
             List<AccessibilityNodeInfo> nodeInfoList = rootNode.findAccessibilityNodeInfosByText(search);
-//            LogUtil.d( "nodeInfoList=" + nodeInfoList);
-            if (nodeInfoList != null && nodeInfoList.size() > 0) {
+            List<AccessibilityNodeInfo> openedMarkNodeInfoList = rootNode.findAccessibilityNodeInfosByText(openedMark);
+            List<AccessibilityNodeInfo> redPacketMarkNodeInfoList = rootNode.findAccessibilityNodeInfosByText(GetRedPacketMarkId());
+            LogUtil.d( "openedMarkNodeInfoList=" + openedMarkNodeInfoList );
+            LogUtil.d( "redPacketMarkNodeInfoList=" + redPacketMarkNodeInfoList );
+            if (nodeInfoList != null && nodeInfoList.size() > 0 &&
+                    (openedMarkNodeInfoList == null || openedMarkNodeInfoList.size() == 0) &&
+                    redPacketMarkNodeInfoList != null && redPacketMarkNodeInfoList.size() > 0){
                 int bottom = 0;
                 for (AccessibilityNodeInfo node : nodeInfoList) {
                     if (node != null) {
@@ -273,6 +284,15 @@ public class RedPacketService extends AccessibilityService {
             }
         }
         return resultNode;
+    }
+
+    private  String GetRedPacketMarkId()
+    {
+        String weworkVersion = AppUtil.getWeworkVersion(this);
+        if ("2.7.2".equals(weworkVersion)) {
+            return "com.tencent.wework:id/cqy";
+        }
+        return null;
     }
 
     @Override

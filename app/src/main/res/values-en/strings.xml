@@ -1,12 +1,15 @@
 <resources>
     <string name="app_name">WeChat Work Red Packet Assistant</string>
+    <string name="app_homo_hollo">企业微信红包助手，帮助你实现在企业微信中，自动抢个人红包和群红包</string>
     <string name="accessibility_description">企业微信红包助手，帮助你实现在企业微信中，自动抢个人红包和群红包</string>
+
     <string name="preference_setting">Settings</string>
 
     <string name="open_assistant">Open Assistant</string>
     <string name="open_monitor_notification">Monitor Notification</string>
 
     <string name="open_red_packet">Open Red Packet</string>
+    <string name="opened_red_packet">红包已领取</string>
     <string name="red_packet_have_opened">All red packets have been opened.</string>
     <string name="red_packet_expired">Red Packet expired</string>
     <string name="notification_default_keyword">Random Amount Red Packet</string>
@@ -24,7 +27,7 @@
     <string name="author">Author</string>
     <string name="instructions">Instructions</string>
     <string name="instructions_detail">Adapted WeChat Work Version:
-        \n2.4.7，2.4.9，2.4.12，2.4.14，2.4.16，2.4.18，2.4.20，2.4.22，2.4.99，2.5.0，2.5.2，2.5.8</string>
+        \n2.4.7，2.4.9，2.4.12，2.4.14，2.4.16，2.4.18，2.4.20，2.4.22，2.4.99，2.5.0，2.5.2，2.5.8,2.7.2</string>
 
     <string-array name="delayTimes">
         <item>Delay of 0 ms</item>
