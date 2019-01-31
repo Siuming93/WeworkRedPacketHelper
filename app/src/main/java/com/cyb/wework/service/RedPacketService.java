@@ -264,7 +264,8 @@ public class RedPacketService extends AccessibilityService {
         if (rootNode != null) {
             List<AccessibilityNodeInfo> nodeInfoList = rootNode.findAccessibilityNodeInfosByText(search);
             List<AccessibilityNodeInfo> openedMarkNodeInfoList = rootNode.findAccessibilityNodeInfosByText(openedMark);
-            List<AccessibilityNodeInfo> redPacketMarkNodeInfoList = rootNode.findAccessibilityNodeInfosByText(GetRedPacketMarkId());
+            String viewID = GetRedPacketMarkId();
+            List<AccessibilityNodeInfo> redPacketMarkNodeInfoList = rootNode.findAccessibilityNodeInfosByViewId(viewID);
             LogUtil.d( "openedMarkNodeInfoList=" + openedMarkNodeInfoList );
             LogUtil.d( "redPacketMarkNodeInfoList=" + redPacketMarkNodeInfoList );
             if (nodeInfoList != null && nodeInfoList.size() > 0 &&
