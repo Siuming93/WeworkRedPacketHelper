@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">小明助手</string>
+    <string name="app_name">自动助手</string>
     <string name="app_homo_hello">Hg,SoSon,SS,+7,OO,YY
         过年好啊</string>
     <string name="accessibility_description">企业微信红包助手，帮助你实现在企业微信中，自动抢个人红包和群红包</string>

@@ -66,25 +66,31 @@ public class RedPacketService extends AccessibilityService {
                 String activityName = event.getClassName().toString();
                 currentActivity = activityName;
                 LogUtil.d( "activityName:" + activityName);
-                break;
+                //CheckForRedPacket();
 
+                break;
             case AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED:
                 String className = event.getClassName().toString();
                 LogUtil.d( "className:" + className);
 
-                if (MessageList.equals(currentActivity)) { // 消息列表
-                    if(getBooleanSetting("pref_auto_click_msg", true)) {
-                        queryPacket();
-                    }
-                } else if (RedEnvelope.equals(currentActivity)) {
-                    openPacket(); // 开红包
-
-                } else if (RedEnvelopeDetail.equals(currentActivity)) {
-                    if(getBooleanSetting("pref_auto_close", true)){
-                        closeRedEnvelopeDetail(); // 关闭红包详情页面
-                    }
-                }
+                CheckForRedPacket();
                 break;
+        }
+    }
+
+    private  void CheckForRedPacket()
+    {
+        if (MessageList.equals(currentActivity)) { // 消息列表
+            if(getBooleanSetting("pref_auto_click_msg", true)) {
+                queryPacket();
+            }
+        } else if (RedEnvelope.equals(currentActivity)) {
+            openPacket(); // 开红包
+
+        } else if (RedEnvelopeDetail.equals(currentActivity)) {
+            if(getBooleanSetting("pref_auto_close", true)){
+                closeRedEnvelopeDetail(); // 关闭红包详情页面
+            }
         }
     }
 
@@ -242,12 +248,15 @@ public class RedPacketService extends AccessibilityService {
         if (node != null) {
             node.performAction(AccessibilityNodeInfo.ACTION_CLICK);
             AccessibilityNodeInfo parent = null;
+            int depth = 0;
             while ((parent = node.getParent()) != null) {
-                LogUtil.d( "parentNode=" + parent);
+                //LogUtil.d( "parentNode=" + parent);
                 if (parent.isClickable()) {
+                    LogUtil.d( "深度: "+depth+"parentNode=" + parent +" " );
                     parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                     break;
                 }
+                depth++;
             }
         }
     }
@@ -260,27 +269,21 @@ public class RedPacketService extends AccessibilityService {
     public AccessibilityNodeInfo getLastRedpackageNode(AccessibilityNodeInfo rootNode) {
         AccessibilityNodeInfo resultNode = null;
         String search = getResources().getString(R.string.open_red_packet); // 红包
-        String openedMark = getResources().getString(R.string.opened_red_packet);
         if (rootNode != null) {
             List<AccessibilityNodeInfo> nodeInfoList = rootNode.findAccessibilityNodeInfosByText(search);
-            List<AccessibilityNodeInfo> openedMarkNodeInfoList = rootNode.findAccessibilityNodeInfosByText(openedMark);
-            String viewID = GetRedPacketMarkId();
-            List<AccessibilityNodeInfo> redPacketMarkNodeInfoList = rootNode.findAccessibilityNodeInfosByViewId(viewID);
-            LogUtil.d( "openedMarkNodeInfoList=" + openedMarkNodeInfoList );
-            LogUtil.d( "redPacketMarkNodeInfoList=" + redPacketMarkNodeInfoList );
-            if (nodeInfoList != null && nodeInfoList.size() > 0 &&
-                    (openedMarkNodeInfoList == null || openedMarkNodeInfoList.size() == 0) &&
-                    redPacketMarkNodeInfoList != null && redPacketMarkNodeInfoList.size() > 0){
+            if (nodeInfoList != null && nodeInfoList.size() > 0){
+
                 int bottom = 0;
                 for (AccessibilityNodeInfo node : nodeInfoList) {
-                    if (node != null) {
-                        final Rect rect = new Rect();
-                        node.getBoundsInScreen(rect);
-                        if (rect.bottom > bottom) {
-                            resultNode = node;
-                            bottom = rect.bottom;
+                    if (node != null && isCanOpenRedPacketNode(node)) {
+
+                            final Rect rect = new Rect();
+                            node.getBoundsInScreen(rect);
+                            if (rect.bottom > bottom) {
+                                resultNode = node;
+                                bottom = rect.bottom;
+                            }
                         }
-                    }
                 }
             }
         }
@@ -294,6 +297,28 @@ public class RedPacketService extends AccessibilityService {
             return "com.tencent.wework:id/cqy";
         }
         return null;
+    }
+
+    private boolean isCanOpenRedPacketNode(AccessibilityNodeInfo node)
+    {
+        /*if(true)
+            return  true;*/
+        AccessibilityNodeInfo parent = null;
+        String viewID = GetRedPacketMarkId();
+        String openedMark = getResources().getString(R.string.opened_red_packet);
+        if (node != null && (parent = node.getParent()) != null && parent.isClickable()) {
+            LogUtil.d( "parentNode=" + parent);
+            List<AccessibilityNodeInfo> openedMarkNodeInfoList = parent.findAccessibilityNodeInfosByText(openedMark);
+            List<AccessibilityNodeInfo> redPacketMarkNodeInfoList = parent.findAccessibilityNodeInfosByViewId(viewID);
+            LogUtil.d( "openedMarkNodeInfoList=" + openedMarkNodeInfoList );
+            LogUtil.d( "redPacketMarkNodeInfoList=" + redPacketMarkNodeInfoList );
+            if((openedMarkNodeInfoList == null || openedMarkNodeInfoList.size() == 0) &&
+                    redPacketMarkNodeInfoList != null && redPacketMarkNodeInfoList.size() > 0)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
